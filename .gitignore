@@ -1,0 +1,25 @@
+# pixi
+.pixi/
+*.lock.bak
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# generated data / figures
+data/*.npz
+data/*.npy
+figures/
+*.mp4
+*.gif
+
+# os
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb
+
+# quarto
+_site/
+.quarto/
