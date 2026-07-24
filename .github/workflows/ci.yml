@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One run per branch/PR; a newer push supersedes an in-flight one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Matches the pixi that produced the committed pixi.lock.
+  PIXI_VERSION: v0.62.2
+
+jobs:
+  # ---------------------------------------------------------------- smoke test
+  verify:
+    name: Verify RatInABox API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: prefix-dev/setup-pixi@v0.10.0
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          environments: default
+          locked: true
+          cache: true
+
+      - name: pixi run verify
+        run: pixi run verify
+
+  # ------------------------------------------------------------------- website
+  build-site:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: prefix-dev/setup-pixi@v0.10.0
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          environments: site
+          locked: true
+          cache: true
+
+      - name: quarto render
+        run: pixi run -e site build-site
+
+      # Uploaded on every run so PRs prove the site still builds; only the
+      # deploy job below is gated on main.
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  # -------------------------------------------------------------- Pages deploy
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [verify, build-site]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Pages deployments must not cancel each other mid-flight.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

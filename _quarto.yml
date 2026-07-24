@@ -17,6 +17,9 @@ execute:
 website:
   title: "RatInABox — Lab Training"
   description: "Learn to use RatInABox python library for neural synthetic-data generation."
+  # Published by .github/workflows/ci.yml on every push to main.
+  site-url: https://kshannon.github.io/ratinabox-training/
+  repo-url: https://github.com/kshannon/ratinabox-training
   reader-mode: true
   search:
     location: sidebar

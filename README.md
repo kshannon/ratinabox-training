@@ -111,9 +111,38 @@ Two files are **generated**, not hand-edited:
   never affected by this.
 
 
-## Deploying the site (future)
+## CI and deployment
 
-TBD
+`.github/workflows/ci.yml` runs on every push to `main`, every pull request, and on demand
+(**Actions → CI → Run workflow**). Both environments come from the committed `pixi.lock`
+via `prefix-dev/setup-pixi`, so CI installs the same pinned packages you have locally.
+
+| Job | Environment | What it does |
+|-----|-------------|--------------|
+| `verify` | `default` | `pixi run verify` — the RatInABox API smoke test |
+| `build-site` | `site` | `quarto render` → uploads `_site/` as a Pages artifact |
+| `deploy` | — | Publishes the artifact to GitHub Pages (**`main` pushes only**) |
+
+`build-site` runs on pull requests too, so a broken render is caught before merge — it just
+doesn't deploy. `deploy` needs *both* other jobs green; if you'd rather publish docs even when
+the RiaB smoke test is red, drop `verify` from that job's `needs:`.
+
+The `verify-solutions` gate (executing every worked answer block) is deliberately **not** in
+CI yet — it's slow and still run by hand: `pixi run verify-solutions`.
+
+### One-time setup
+
+GitHub Pages must be told to take its content from Actions rather than from a branch:
+
+**Settings → Pages → Build and deployment → Source → GitHub Actions**
+
+After that, every push to `main` republishes <https://kshannon.github.io/ratinabox-training/>.
+
+### Pinned versions
+
+`PIXI_VERSION` at the top of the workflow pins the pixi CLI to the version that produced
+`pixi.lock`. `pixi install --locked` in CI **fails** if `pixi.toml` and `pixi.lock` have drifted
+— so when you change dependencies, commit the regenerated lockfile in the same commit.
 
 ## Maintenance notes
 
