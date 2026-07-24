@@ -1,0 +1,58 @@
+[workspace]
+name = "ratinabox-training"
+version = "0.1.0"
+description = "A hands-on training resource for the RatInABox library, oriented toward synthetic-data generation for subiculum projects."
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+# --------------------------------------------------------------------------
+# Core scientific + notebook stack (conda-forge, PyPI)
+# --------------------------------------------------------------------------
+[dependencies]
+python = "3.11.*"
+numpy = "*"
+scipy = "*"
+matplotlib = "*"
+shapely = "*"          
+pandas = "*"
+scikit-learn = "*"
+jupyterlab = "*"
+notebook = "*"
+ipywidgets = "*"
+ipykernel = "*"
+tqdm = "*"
+jupytext = "*"
+imageio = "*"
+ffmpeg = "*"
+
+[pypi-dependencies]
+ratinabox = ">=1.15.3,<2"
+
+# --------------------------------------------------------------------------
+# Optional deep-learning, see README for build instructions
+# --------------------------------------------------------------------------
+[feature.dl.dependencies]
+pytorch = "*"
+
+# --------------------------------------------------------------------------
+# Site-build feature: Quarto CLI for rendering the pylab website.
+# MAINTAINER SPECIFIC ONLY
+# --------------------------------------------------------------------------
+[feature.site.dependencies]
+quarto = "*"
+
+[environments]
+default = { solve-group = "default" }
+dl = { features = ["dl"], solve-group = "dl" }
+site = { features = ["site"], solve-group = "default" }
+
+# --------------------------------------------------------------------------
+# Convenience tasks
+# --------------------------------------------------------------------------
+[tasks]
+lab = "jupyter lab"
+nb = "jupyter notebook"
+verify = "python scripts/verify_install.py"
+verify-solutions = "python scripts/verify_solutions.py"
+build-site = "quarto render"
+preview-site = "quarto preview"
