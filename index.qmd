@@ -5,9 +5,9 @@ toc: false
 ---
 
 A hands-on guide to the **[RatInABox](https://github.com/RatInABox-Lab/RatInABox)**
-library, built around one concrete goal: generating **synthetic training data** for hippocampal 
-formation computational projects. The modules in this site contain a written walk through and code 
-starter notebook. Answers are provided for each problem. 
+library, built around one concrete goal: generating **synthetic training data** for computational cognitive 
+neuroscience projects. The modules in this site contain a written walk through and code starter notebook. 
+Answers are provided for each problem. 
 
 ## Pick a Setup Path
 
