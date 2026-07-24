@@ -1,0 +1,27 @@
+---
+title: "About"
+---
+
+## What this is
+**RatInABox generates the synthetic training data.**
+
+This is a training resource for getting up to speed with **[RatInABox](https://github.com/RatInABox-Lab/RatInABox)**.
+Specifically, the learnig modules here are tilted toward the electrophysiology recordings that are done in our lab. 
+This resource was developed and currently maintained by [Kyle Shannon](https://www.kmshannon.com).
+
+
+## How it's maintained
+
+- Content lives as plain-text Markdown + Jupyter notebooks in the repo, so edits are simple
+  and diffable.
+- Two verification scripts guard correctness: `scripts/verify_install.py` (checks the
+  RatInABox API surface used throughout) and `scripts/verify_solutions.py` (executes every
+  worked solution). These are meant to run in CI so in the future the site can't publish broken 
+  code, by our hand ir by updating to a future version of RatInABox.
+- The site is built with [Quarto](https://quarto.org) (`pixi run -e site build-site`).
+
+
+
+## Credits
+
+Built on **RatInABox** (Tom M George, Mehul Rastogi, William de Cothi, Claudia Clopath, Kimberly Stachenfeld, Caswell Barry. "RatInABox, a toolkit for modelling locomotion and neuronal activity in continuous environments" (2024), eLife, https://doi.org/10.7554/eLife.85274 .)

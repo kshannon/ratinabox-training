@@ -1,0 +1,87 @@
+project:
+  type: website
+  output-dir: _site
+  # Render only the curriculum content — not build inputs (_frag_*), scripts, or README.
+  render:
+    - index.qmd
+    - about.qmd
+    - modules/*.md
+    - notebooks/*.ipynb
+    - reference/*.md
+    - solutions/00_ANSWERS_AND_LLM_TUTOR.md
+
+# v1: render existing prose as-is. No code is executed at build time
+execute:
+  enabled: false
+
+website:
+  title: "RatInABox — Lab Training"
+  description: "Learn to use RatInABox python library for neural synthetic-data generation."
+  reader-mode: true
+  search:
+    location: sidebar
+    type: overlay
+  page-navigation: true
+  navbar:
+    left:
+      - text: "Start here"
+        href: index.qmd
+      - text: "Modules"
+        href: modules/module_1_environments_and_agents.md
+      - text: "About"
+        href: about.qmd
+    tools:
+      - icon: github
+        href: https://github.com/RatInABox-Lab/RatInABox
+        text: "RatInABox on GitHub"
+  sidebar:
+    style: docked
+    collapse-level: 2
+    contents:
+      - text: "Start here"
+        href: index.qmd
+      - section: "Modules"
+        contents:
+          - text: "1 · Environments & Agents"
+            href: modules/module_1_environments_and_agents.md
+          - text: "2 · Place cells (CA1 input)"
+            href: modules/module_2_place_cells.md
+          - text: "3 · Head direction & the cell zoo"
+            href: modules/module_3_head_direction_velocity_and_the_cell_zoo.md
+          - text: "4 · Mazes, spikes & extraction"
+            href: modules/module_4_structured_mazes_and_spikes.md
+          - text: "5 · Synthetic-data pipeline"
+            href: modules/module_5_capstone_synthetic_data_pipeline.md
+      - section: "Starter notebooks"
+        contents:
+          - text: "Module 1 starter"
+            href: notebooks/module_1_starter.ipynb
+          - text: "Module 2 starter"
+            href: notebooks/module_2_starter.ipynb
+          - text: "Module 3 starter"
+            href: notebooks/module_3_starter.ipynb
+          - text: "Module 4 starter"
+            href: notebooks/module_4_starter.ipynb
+          - text: "Module 5 starter"
+            href: notebooks/module_5_starter.ipynb
+      - section: "Solutions"
+        contents:
+          - text: "Answers & LLM tutor guide"
+            href: solutions/00_ANSWERS_AND_LLM_TUTOR.md
+      - text: "About"
+        href: about.qmd
+  page-footer:
+    left: "Kyle Shannon"
+    right: "RatInABox Training"
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    grid:
+      sidebar-width: 320px
