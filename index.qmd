@@ -5,21 +5,21 @@ toc: false
 ---
 
 A hands-on guide to the **[RatInABox](https://github.com/RatInABox-Lab/RatInABox)**
-library, built around one concrete goal: generating **synthetic training data** for computational cognitive 
-neuroscience projects. The modules in this site contain a written walk through and code starter notebook. 
-Answers are provided for each problem. 
+library, built around one concrete goal: generating **synthetic training data** for computational cognitive
+neuroscience projects. The modules in this site contain a written walk through and code starter notebook.
+Answers are provided for each problem.
 
 ## Pick a Setup Path
 
-There are two ways to run through these modules, via google collab, or your own local env. 
+There are two ways to run through these modules, via google collab, or your own local env.
 Instructions for both are below.
 
 ::: {.grid}
 
 ::: {.g-col-12 .g-col-md-6}
-### Virtual env and zero maintenance 
+### Virtual env and zero maintenance
 Open any notebook in **Google Colab** and run `pip install ratinabox`. No local
-setup required, but your compute and server time is constrained by Google. 
+setup required, but your compute and server time is constrained by Google.
 This is the fastest way to work with the modules.
 
 *(Colab launch buttons are coming to each notebook page — for now, download the `.ipynb`
@@ -28,11 +28,11 @@ and upload it to [colab.research.google.com](https://colab.research.google.com).
 
 ::: {.g-col-12 .g-col-md-6}
 ### Local env through Pixi
-For reproducible synthetic-data generation, use the pinned environment below. 
+For reproducible synthetic-data generation, use the pinned environment below.
 
 ::: {.callout-tip appearance="simple"}
 ## Local env prerequisite
-Before running these commands you must have [pixi](https://pixi.prefix.dev/latest/#installation) installed on your computer. 
+Before running these commands you must have [pixi](https://pixi.prefix.dev/latest/#installation) installed on your computer.
 :::
 
 ```bash
@@ -52,7 +52,7 @@ pixi install -e dl && pixi run -e dl lab
 ## Learning Modules
 
 Work each module's write-up alongside its starter notebook, answers are hidden and can be
-revealed at any time. Modules build on each other and it is recommended to work on them in order. 
+revealed at any time. Modules build on each other and it is recommended to work on them in order.
 
 | # | Module | What you get out of it |
 |---|--------|------------------------|
@@ -61,9 +61,3 @@ revealed at any time. Modules build on each other and it is recommended to work 
 | 3 | [Head direction & the cell zoo](modules/module_3_head_direction_velocity_and_the_cell_zoo.md) | HD + angular-velocity inputs |
 | 4 | [Mazes, spikes & extraction](modules/module_4_structured_mazes_and_spikes.md) | Structured geometry, Poisson spikes, dataset assembly |
 | 5 | [Synthetic-data pipeline](modules/module_5_capstone_synthetic_data_pipeline.md) | Towards a realistic generator for an RNN |
-
-::: {.callout-tip appearance="simple"}
-## Stuck on a problem?
-The [answers & LLM tutor guide](solutions/00_ANSWERS_AND_LLM_TUTOR.md) has worked solutions
-for every problem, plus a copy-paste prompt that turns an LLM into a Socratic tutor.
-:::
