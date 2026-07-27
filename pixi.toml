@@ -24,6 +24,7 @@ tqdm = "*"
 jupytext = "*"
 imageio = "*"
 ffmpeg = "*"
+nbstripout = ">=0.9.1,<0.10"
 
 [pypi-dependencies]
 ratinabox = ">=1.15.3,<2"
@@ -53,6 +54,8 @@ site = { features = ["site"], solve-group = "default" }
 lab = "jupyter lab"
 nb = "jupyter notebook"
 verify = "python scripts/verify_install.py"
-verify-solutions = "python scripts/verify_solutions.py"
+clean-nb = "nbstripout notebooks/*.ipynb"
+make-student = "python scripts/make_student_notebooks.py"
+check-student = "python scripts/make_student_notebooks.py --check"
 build-site = "quarto render"
 preview-site = "quarto preview"
