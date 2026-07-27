@@ -5,25 +5,25 @@ toc: false
 ---
 
 A hands-on guide to the **[RatInABox](https://github.com/RatInABox-Lab/RatInABox)**
-library, built around one concrete goal: generating **synthetic training data** for computational cognitive
-neuroscience projects. The modules in this site contain a written walk through and code starter notebook.
-Answers are provided for each problem.
+library, built around one concrete goal: generating **synthetic training data** for
+computational cognitive neuroscience projects. Each module is a single runnable notebook: a
+written walk-through, then a set of problems to work. The answers live in the module too,
+folded away, so you can reveal them whenever you're stuck or want to check your work.
 
 ## Pick a Setup Path
 
-There are two ways to run through these modules, via google collab, or your own local env.
+There are two ways to run these modules: in Google Colab, or in your own local environment.
 Instructions for both are below.
 
 ::: {.grid}
 
 ::: {.g-col-12 .g-col-md-6}
-### Virtual env and zero maintenance
-Open any notebook in **Google Colab** and run `pip install ratinabox`. No local
-setup required, but your compute and server time is constrained by Google.
-This is the fastest way to work with the modules.
+### Google Colab · zero setup
+Open a module's **practice notebook** in Google Colab with the button in the module table below.
+The notebook already includes the `pip install` step, so there's nothing to configure. Compute and
+session time are capped by Google, but it's the fastest way in.
 
-*(Colab launch buttons are coming to each notebook page — for now, download the `.ipynb`
-and upload it to [colab.research.google.com](https://colab.research.google.com).)*
+*(Each module links straight to Colab — no manual download or upload needed.)*
 :::
 
 ::: {.g-col-12 .g-col-md-6}
@@ -51,13 +51,12 @@ pixi install -e dl && pixi run -e dl lab
 
 ## Learning Modules
 
-Work each module's write-up alongside its starter notebook, answers are hidden and can be
-revealed at any time. Modules build on each other and it is recommended to work on them in order.
+Each module is one notebook where we work through some major facet of the RiAB lib. Answers for problems located in modules are folded to be hidden and a practice notebook is included which has only boilerplate code and problems without answers. Lastly, modules build on each other, so it’s best to work them in order.
 
-| # | Module | What you get out of it |
-|---|--------|------------------------|
-| 1 | [Environments & Agents](modules/module_1_environments_and_agents.md) | Build worlds and drive a realistic simulated animal |
-| 2 | [Place cells (CA1 input)](modules/module_2_place_cells.md) | Single-location place codes and rate maps |
-| 3 | [Head direction & the cell zoo](modules/module_3_head_direction_velocity_and_the_cell_zoo.md) | HD + angular-velocity inputs |
-| 4 | [Mazes, spikes & extraction](modules/module_4_structured_mazes_and_spikes.md) | Structured geometry, Poisson spikes, dataset assembly |
-| 5 | [Synthetic-data pipeline](modules/module_5_capstone_synthetic_data_pipeline.md) | Towards a realistic generator for an RNN |
+| # | Module | What you get out of it | Practice notebook |
+|---|--------|------------------------|-------------------|
+| 1 | [Environments & Agents](notebooks/module_1.ipynb) | Build worlds and drive a realistic simulated animal | [Colab](https://colab.research.google.com/github/kshannon/ratinabox-training/blob/main/notebooks/module_1_practice.ipynb){.btn .btn-sm .btn-primary role="button" target="_blank"} [Download](notebooks/module_1_practice.ipynb){.btn .btn-sm .btn-outline-primary role="button" download="module_1_practice.ipynb"} |
+| 2 | Place cells (CA1 input) *(coming soon)* | Single-location place codes and rate maps | — |
+| 3 | Head direction & the cell zoo *(coming soon)* | HD + angular-velocity inputs | — |
+| 4 | Mazes, spikes & extraction *(coming soon)* | Structured geometry, Poisson spikes, dataset assembly | — |
+| 5 | Synthetic-data pipeline *(coming soon)* | Towards a realistic generator for an RNN | — |

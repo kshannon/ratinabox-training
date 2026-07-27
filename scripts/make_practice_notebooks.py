@@ -1,7 +1,7 @@
 """
-make_student_notebooks.py
-=========================
-Derive the *student* version of each module notebook from the complete one.
+make_practice_notebooks.py
+==========================
+Derive the *practice* version of each module notebook from the complete one.
 
 Architecture
 ------------
@@ -18,20 +18,20 @@ An answer cell needs two things:
     means you never have to leave the keyboard.
 
 This script copies each module notebook and replaces every `solution`-tagged cell
-with a stub, producing `notebooks/module_N_student.ipynb` — what students download
-and what the "Open in Colab" button opens. Because it is generated, the student
-version can never drift from the module.
+with a stub, producing `notebooks/module_N_practice.ipynb` — the practice notebook
+people download and open in Colab. Because it is generated, the practice version can
+never drift from the module.
 
 Optional scaffolding
 --------------------
 If an answer cell contains a divider line `# --- SOLUTION ---`, everything ABOVE the
-divider is preserved in the student stub (use it to hand out starter code); the
+divider is preserved in the practice stub (use it to hand out starter code); the
 answer below it is removed. Without a divider, the whole body is replaced.
 
 Usage
 -----
-    pixi run make-student            # regenerate all
-    pixi run python scripts/make_student_notebooks.py --check   # CI: verify up to date
+    pixi run make-practice            # regenerate all
+    pixi run python scripts/make_practice_notebooks.py --check   # CI: verify up to date
 """
 
 from __future__ import annotations
@@ -49,9 +49,9 @@ NB_DIR = os.path.join(ROOT, "notebooks")
 
 SOLUTION_TAG = "solution"
 DIVIDER = "# --- SOLUTION ---"
-STUDENT_SUFFIX = "_student"
+PRACTICE_SUFFIX = "_practice"
 
-# Prepended to every student notebook so it runs in a bare Colab kernel.
+# Prepended to every practice notebook so it runs in a bare Colab kernel.
 COLAB_SETUP = """\
 #| eval: false
 # --- Colab / fresh-environment setup -------------------------------------
@@ -66,7 +66,7 @@ STUB_BODY = """\
 
 
 def is_answer_cell(cell) -> bool:
-    """Is this an answer cell (to be stubbed out of the student notebook)?
+    """Is this an answer cell (to be stubbed out of the practice notebook)?
 
     Two equivalent ways to mark one, so you never have to leave the keyboard while
     authoring in JupyterLab:
@@ -93,13 +93,13 @@ def is_answer_cell(cell) -> bool:
 
 
 def strip_quarto_directives(src: str) -> str:
-    """Drop `#| ...` cell directives (they're for Quarto rendering, not students)."""
+    """Drop `#| ...` cell directives (they're for Quarto rendering, not the reader)."""
     keep = [ln for ln in src.splitlines() if not ln.strip().startswith("#|")]
     return "\n".join(keep).strip("\n")
 
 
 def make_stub(src: str) -> str:
-    """Turn an answer cell body into a student stub, preserving any scaffolding."""
+    """Turn an answer cell body into a practice stub, preserving any scaffolding."""
     body = strip_quarto_directives(src)
     if DIVIDER in body:
         scaffold = body.split(DIVIDER, 1)[0].rstrip("\n")
@@ -107,8 +107,8 @@ def make_stub(src: str) -> str:
     return STUB_BODY
 
 
-def build_student(nb: nbformat.NotebookNode) -> tuple[nbformat.NotebookNode, int]:
-    """Return (student notebook, number of answer cells stubbed)."""
+def build_practice(nb: nbformat.NotebookNode) -> tuple[nbformat.NotebookNode, int]:
+    """Return (practice notebook, number of answer cells stubbed)."""
     out = copy.deepcopy(nb)
     n_stubbed = 0
     cells = []
@@ -127,7 +127,7 @@ def build_student(nb: nbformat.NotebookNode) -> tuple[nbformat.NotebookNode, int
                 t for t in cell.metadata.get("tags", []) if t != SOLUTION_TAG
             ] + ["exercise"]
             n_stubbed += 1
-        # Never ship stored outputs to students.
+        # Never ship stored outputs in the practice notebook.
         if cell.cell_type == "code":
             cell.outputs = []
             cell.execution_count = None
@@ -152,17 +152,17 @@ def fingerprint(nb: nbformat.NotebookNode) -> list[tuple[str, str, tuple[str, ..
 
 
 def module_notebooks() -> list[str]:
-    """Complete module notebooks (excludes generated student versions)."""
+    """Complete module notebooks (excludes generated practice versions)."""
     return sorted(
         p
         for p in glob.glob(os.path.join(NB_DIR, "module_*.ipynb"))
-        if not os.path.basename(p).replace(".ipynb", "").endswith(STUDENT_SUFFIX)
+        if not os.path.basename(p).replace(".ipynb", "").endswith(PRACTICE_SUFFIX)
     )
 
 
-def student_path(src_path: str) -> str:
+def practice_path(src_path: str) -> str:
     stem = os.path.basename(src_path)[: -len(".ipynb")]
-    return os.path.join(NB_DIR, f"{stem}{STUDENT_SUFFIX}.ipynb")
+    return os.path.join(NB_DIR, f"{stem}{PRACTICE_SUFFIX}.ipynb")
 
 
 def main() -> int:
@@ -170,7 +170,7 @@ def main() -> int:
     ap.add_argument(
         "--check",
         action="store_true",
-        help="don't write; exit non-zero if any student notebook is missing or stale",
+        help="don't write; exit non-zero if any practice notebook is missing or stale",
     )
     args = ap.parse_args()
 
@@ -182,15 +182,15 @@ def main() -> int:
     stale = []
     for src in sources:
         nb = nbformat.read(src, as_version=4)
-        student, n_stubbed = build_student(nb)
-        dest = student_path(src)
+        practice, n_stubbed = build_practice(nb)
+        dest = practice_path(src)
         rel_src = os.path.relpath(src, ROOT)
         rel_dest = os.path.relpath(dest, ROOT)
 
         if n_stubbed == 0:
             print(f"  !  {rel_src}: no cells tagged '{SOLUTION_TAG}' — nothing to strip")
 
-        new_text = nbformat.writes(student)
+        new_text = nbformat.writes(practice)
         if args.check:
             if not os.path.exists(dest):
                 stale.append(f"{rel_dest} is missing")
@@ -206,12 +206,12 @@ def main() -> int:
 
     if args.check:
         if stale:
-            print("Student notebooks are not up to date:")
+            print("Practice notebooks are not up to date:")
             for s in stale:
                 print(f"  ✗ {s}")
-            print("Run: pixi run make-student")
+            print("Run: pixi run make-practice")
             return 1
-        print(f"All {len(sources)} student notebook(s) are up to date.")
+        print(f"All {len(sources)} practice notebook(s) are up to date.")
     return 0
 
 
