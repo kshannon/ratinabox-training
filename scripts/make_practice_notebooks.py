@@ -165,6 +165,63 @@ def practice_path(src_path: str) -> str:
     return os.path.join(NB_DIR, f"{stem}{PRACTICE_SUFFIX}.ipynb")
 
 
+def has_code_fold(cell) -> bool:
+    return any(l.strip().startswith("#| code-fold") for l in cell.source.splitlines())
+
+
+def lint() -> int:
+    """Catch answer cells that are about to leak.
+
+    An answer cell needs a `code-fold` directive (so the WEBSITE hides it) and a
+    `solution` marker (so THIS SCRIPT strips it). Those are set independently, so
+    they can drift apart when a cell is edited, retyped, or copy-pasted. Either
+    half alone is a silent failure:
+
+      * folded but unmarked -> the answer ships in the practice notebook
+      * marked but unfolded -> the answer is spoiled on the module page
+
+    Neither shows up as a broken build, which is why this check exists.
+    """
+    problems = []
+    for src in module_notebooks():
+        nb = nbformat.read(src, as_version=4)
+        rel = os.path.relpath(src, ROOT)
+        for i, c in enumerate(nb.cells):
+            if c.cell_type != "code":
+                continue
+            marked, folded = is_answer_cell(c), has_code_fold(c)
+            if folded and not marked:
+                problems.append(
+                    f"{rel} cell {i}: has `code-fold` but no `solution` marker. "
+                    f"The answer WILL leak into the practice notebook."
+                )
+            elif marked and not folded:
+                problems.append(
+                    f"{rel} cell {i}: marked `solution` but has no `code-fold`. "
+                    f"The answer will be visible on the module page."
+                )
+
+    if problems:
+        print("Answer-cell markers are inconsistent:")
+        for p in problems:
+            print(f"  ✗ {p}")
+        print(
+            "\nEvery answer cell needs all of:\n"
+            '  #| code-fold: true\n  #| code-summary: "Show solution N.M"\n'
+            "  #| tags: [solution]"
+        )
+        return 1
+
+    n = sum(
+        1
+        for src in module_notebooks()
+        for c in nbformat.read(src, as_version=4).cells
+        if c.cell_type == "code" and is_answer_cell(c)
+    )
+    print(f"All {n} answer cell(s) are correctly marked and folded.")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -172,7 +229,15 @@ def main() -> int:
         action="store_true",
         help="don't write; exit non-zero if any practice notebook is missing or stale",
     )
+    ap.add_argument(
+        "--lint",
+        action="store_true",
+        help="don't write; exit non-zero if any answer cell is mis-marked (leak guard)",
+    )
     args = ap.parse_args()
+
+    if args.lint:
+        return lint()
 
     sources = module_notebooks()
     if not sources:
