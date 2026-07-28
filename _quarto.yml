@@ -41,8 +41,8 @@ website:
         href: about.qmd
     tools:
       - icon: github
-        href: https://github.com/RatInABox-Lab/RatInABox
-        text: "RatInABox on GitHub"
+        href: https://github.com/kshannon/ratinabox-training
+        text: "This course on GitHub"
   sidebar:
     style: docked
     collapse-level: 2
@@ -53,6 +53,12 @@ website:
         contents:
           - text: "1 · Environments & Agents"
             href: notebooks/module_1.ipynb
+          - text: "2 · Place Cells & Rate Maps"
+            href: notebooks/module_2.ipynb
+          - text: "3 · Head Direction & the Cell Zoo"
+            href: notebooks/module_3.ipynb
+          - text: "4 · Structured Mazes & Spikes"
+            href: notebooks/module_4.ipynb
       - text: "About"
         href: about.qmd
   page-footer:
