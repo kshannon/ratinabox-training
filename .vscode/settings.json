@@ -1,0 +1,18 @@
+{
+  // Point VS Code at the pixi environment. The Python extension does not
+  // auto-discover pixi envs, so without this the kernel picker only offers
+  // homebrew / system python.
+  //
+  // This path is relative to the workspace, so it works on any machine once
+  // `pixi install` has been run.
+  "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
+
+  // Let the notebook editor find the same interpreter.
+  "python.venvPath": "${workspaceFolder}/.pixi/envs",
+  "python.venvFolders": ["default", "dl", "site"],
+
+  // Notebooks in this repo are committed without outputs (nbstripout).
+  // Don't let the editor re-add them on save.
+  "notebook.output.scrolling": true,
+  "jupyter.askForKernelRestart": false
+}
